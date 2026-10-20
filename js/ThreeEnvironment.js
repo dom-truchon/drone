@@ -31,13 +31,26 @@ export class ThreeEnvironment {
         time *= 0.001; // convert time to seconds
 
         // Update camera aspect ratio and projection matrix (screen resize handling)
-        this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
-        this.camera.updateProjectionMatrix();
+        if (this.resizeRendererToDisplaySize()) {
+            this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
+            this.camera.updateProjectionMatrix();
+        }
 
         this.renderer.render(this.scene, this.camera);
         this.controls.update();
 
         requestAnimationFrame(this.render);
+    }
+
+    // Resize the renderer to match the display size of the canvas
+    resizeRendererToDisplaySize() {
+        const width = this.canvas.clientWidth;
+        const height = this.canvas.clientHeight;
+        const needResize = this.canvas.width !== width || this.canvas.height !== height;
+        if (needResize) {
+            this.renderer.setSize(width, height, false);
+        }
+        return needResize;
     }
 
     addDirectionalLight(color, intensity, x=0, y=0, z=0) {
