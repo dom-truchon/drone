@@ -6,12 +6,14 @@ const env = new ThreeEnvironment();
 window.env = env; // Expose the environment for debugging
 
 // Test setup
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-env.scene.add(cube);
+// env.testEnvironment();
+env.scene.background = new THREE.Color('skyblue');
 
-env.renderer.render(env.scene, env.camera);
+let vw = new VoxelWorld(256, env); // Example cell size
 
-// let vw = new VoxelWorld(16, env); // Example cell size
-// vw.test();
+// Lighting
+env.addDirectionalLight(0xffffff, 2, 1, 2, 1);
+env.addDirectionalLight(0xffffff, 1, -1, 1, -1);
+env.addAmbientLight(0xffffff, 0.5);
+
+vw.test();
