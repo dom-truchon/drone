@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 
+/* * * * * * * * * * * * * * * * * * * * * * * * 
+    https://threejs.org/manual/#voxel-geometry
+* * * * * * * * * * * * * * * * * * * * * * * */
+
 export class VoxelWorld {
     constructor(cellSize, env) {
         this.cellSize = cellSize;
