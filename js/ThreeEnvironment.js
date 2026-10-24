@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 export class ThreeEnvironment {
 
     lights = {};
-    meshes = {};
+    rendering = true;
 
     constructor() {
         this.scene = new THREE.Scene();
@@ -28,6 +28,8 @@ export class ThreeEnvironment {
     }
 
     render = (time) => {
+        if(!this.rendering) return;
+
         time *= 0.001; // convert time to seconds
 
         // Update camera aspect ratio and projection matrix (screen resize handling)
@@ -36,8 +38,8 @@ export class ThreeEnvironment {
             this.camera.updateProjectionMatrix();
         }
 
-        this.renderer.render(this.scene, this.camera);
         this.controls.update();
+        this.renderer.render(this.scene, this.camera);
 
         requestAnimationFrame(this.render);
     }
@@ -57,9 +59,23 @@ export class ThreeEnvironment {
         const light = new THREE.DirectionalLight(color, intensity);
         light.position.set(x, y, z);
         this.scene.add(light);
-        let id = `directional_${Object.keys(this.lights).length}`;
-        this.lights[id] = light;
-        return id;
+        this.lights[light.uuid] = light;
+        return light.uuid;
     }
 
+    addAmbientLight(color, intensity) {
+        const light = new THREE.AmbientLight(color, intensity);
+        this.scene.add(light);
+        this.lights[light.uuid] = light;
+        return light.uuid;
+    }
+
+    testEnvironment() {
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        env.scene.add(cube);
+        env.addDirectionalLight(0xFFFFFF, 3, -1, 2, 4);
+        env.addDirectionalLight(0xFFFFFF, 3, 1, -2, -4);
+    }
 }
